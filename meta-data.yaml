@@ -147,7 +147,7 @@ components:
         description:
           type: string
           description: description of the meta-object
-        attributes:
+        meta-object_mailslot_id:
           type: array
           items:
             $ref: '#/components/schemas/meta-attribute'
@@ -167,7 +167,13 @@ components:
       required: true
       schema:
         type: string
-        example: product, warehouse, store
+      examples: 
+        product:
+          value: product
+        warehouse:
+          value: warehouse
+        store:
+          value: store
     
   securitySchemes:
     cc_inv_auth:
