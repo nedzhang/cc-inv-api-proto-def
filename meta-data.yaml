@@ -15,11 +15,11 @@ externalDocs:
 servers:
 - url: https://cc-inv-meta-dev.mybluemix.net/cc-inv-meta
 tags:
-- name: meta-objects
-  description: meta objects are the holders of the meta data. A meta-object describes
+- name: meta_objects
+  description: meta objects are the holders of the meta data. A meta_object describes
     the attributes of an entity such as warehouse, product, store in physcial world.
 paths:
-  /{tenant_id}/{meta_type}/meta-objects:
+  /{tenant_id}/{meta_type}/meta_objects:
     parameters:
       - $ref: '#/components/parameters/tenant_id_param'
       - $ref: '#/components/parameters/meta_type_param'
@@ -38,10 +38,10 @@ paths:
               node-type: "seller"
     get:
       tags:
-      - meta-objects
-      summary: list meta-objects
-      description: Get the complete list of meta-objects
-      operationId: meta-objects-get
+      - meta_objects
+      summary: list meta_objects
+      description: Get the complete list of meta_objects
+      operationId: meta_objects-get
       responses:
         200:
           description: successful operation
@@ -50,7 +50,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/meta-object'
+                  $ref: '#/components/schemas/meta_object'
         400:
           description: Invalid status value
           content: {}
@@ -58,29 +58,29 @@ paths:
       - cc_inv_auth:
         - write:cc_inv
         - read:cc_inv
-  /{tenant_id}/{meta_type}/meta-objects/{meta-object_id}:
+  /{tenant_id}/{meta_type}/meta_objects/{meta_object_id}:
     parameters:
     - $ref: '#/components/parameters/tenant_id_param'
     - $ref: '#/components/parameters/meta_type_param'
-    - name: meta-object_id
+    - name: meta_object_id
       in: path
-      description: ID of the meta-object
+      description: ID of the meta_object
       required: true
       schema:
         type: string
     get:
       tags:
-      - meta-objects
-      summary: get a meta-object
-      description: Get a meta-object by id
-      operationId: meta-object-get
+      - meta_objects
+      summary: get a meta_object
+      description: Get a meta_object by id
+      operationId: meta_object-get
       responses:
         200:
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/meta-object'
+                $ref: '#/components/schemas/meta_object'
         500:
           description: Invalid input
           content: {}
@@ -90,16 +90,16 @@ paths:
         - read:cc_inv
     put:
       tags:
-      - meta-objects
-      summary: create/update a meta-object
-      description: Create or update a meta-object
-      operationId: meta-object-put
+      - meta_objects
+      summary: create/update a meta_object
+      description: Create or update a meta_object
+      operationId: meta_object-put
       requestBody:
         description: List of user object
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/meta-object'
+              $ref: '#/components/schemas/meta_object'
         required: true
       responses:
         200:
@@ -107,7 +107,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/meta-object'
+                $ref: '#/components/schemas/meta_object'
         500:
           description: Invalid input
           content: {}
@@ -118,10 +118,10 @@ paths:
       x-codegen-request-body-name: body
     delete:
       tags:
-      - meta-objects
-      summary: delete a meta-object
-      description: Delete a meta-object by meta-object id
-      operationId: meta-object-delete
+      - meta_objects
+      summary: delete a meta_object
+      description: Delete a meta_object by meta_object id
+      operationId: meta_object-delete
       responses:
         200:
           description: successful operation
@@ -144,15 +144,15 @@ components:
         value:
           type: string
           description: value of the attribute
-    meta-object:
+    meta_object:
       type: object
       properties:
-        meta-object_id:
+        meta_object_id:
           type: string
-          description: id of the meta-object
+          description: id of the meta_object
         description:
           type: string
-          description: description of the meta-object
+          description: description of the meta_object
         attributes:
           type: array
           items:
