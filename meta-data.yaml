@@ -28,8 +28,14 @@ paths:
         required: false
         schema:
           type: object
-          example: {example: "like below", category: "LIGHT-OIL-CRACKING" }
         description: filter by attributes
+        examples:
+          by-category: 
+            value:
+              category: "LIGHT-OIL-CRACKING"
+          by-node-type:
+            value:
+              node-type: "seller"
     get:
       tags:
       - meta-objects
