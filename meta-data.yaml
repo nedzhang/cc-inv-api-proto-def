@@ -155,7 +155,8 @@ components:
           description: description of the meta_object
         parent_object_id:
           type: string
-          required: no
+          minimum: 0
+          maximum: 1
           description: id of parent meta object if exists
         attributes:
           type: array
