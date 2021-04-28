@@ -21,18 +21,15 @@ tags:
 paths:
   /{tenant_id}/{meta_type}/meta-objects:
     parameters:
-    - name: tenant_id
-      in: path
-      description: ID of the tenant
-      required: true
-      schema:
-        type: string
-    - name: meta_type
-      in: path
-      description: Type of the meta
-      required: true
-      schema:
-        type: string
+      - $ref: '#/components/parameters/tenant_id_param'
+      - $ref: '#/components/parameters/meta_type_param'
+      - in: query
+        name: filter
+        required: false
+        schema:
+          type: object
+          example: {example: "like below", category: "LIGHT-OIL-CRACKING" }
+        description: filter by attributes
     get:
       tags:
       - meta-objects
@@ -57,21 +54,11 @@ paths:
         - read:cc_inv
   /{tenant_id}/{meta_type}/meta-objects/{meta-object_id}:
     parameters:
-    - name: tenant_id
-      in: path
-      description: ID of the tenant
-      required: true
-      schema:
-        type: string
-    - name: meta_type
-      in: path
-      description: Type of the meta
-      required: true
-      schema:
-        type: string
+    - $ref: '#/components/parameters/tenant_id_param'
+    - $ref: '#/components/parameters/meta_type_param'
     - name: meta-object_id
       in: path
-      description: ID of meta-object to retrieve
+      description: ID of the meta-object
       required: true
       schema:
         type: string
@@ -165,6 +152,23 @@ components:
           items:
             $ref: '#/components/schemas/meta-attribute'
 
+  parameters:
+    tenant_id_param: 
+      name: tenant_id
+      in: path
+      description: ID of the tenant
+      required: true
+      schema:
+        type: string
+    meta_type_param:
+      name: meta_type
+      in: path
+      description: Type of the meta
+      required: true
+      schema:
+        type: string
+        example: product, warehouse, store
+    
   securitySchemes:
     cc_inv_auth:
       type: oauth2
