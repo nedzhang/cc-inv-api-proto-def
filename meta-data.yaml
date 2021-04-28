@@ -153,6 +153,10 @@ components:
         description:
           type: string
           description: description of the meta_object
+        parent_object_id:
+          type: string
+          required: no
+          description: id of parent meta object if exists
         attributes:
           type: array
           items:
