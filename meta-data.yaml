@@ -140,18 +140,26 @@ components:
       properties:
         name:
           type: string
+          minimum: 1
+          maximum: 1
           description: name of the attribute
         value:
           type: string
+          minimum: 1
+          maximum: 1
           description: value of the attribute
     meta_object:
       type: object
       properties:
         meta_object_id:
           type: string
+          minimum: 1
+          maximum: 1
           description: id of the meta_object
         description:
           type: string
+          minimum: 1
+          maximum: 1
           description: description of the meta_object
         parent_object_id:
           type: string
