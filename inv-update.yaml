@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
-  title: cc-inv-meta
-  description: Cloud Cognitive Data Platform for inventory meta data
+  title: cc-inv-update
+  description: Cloud Cognitive Data Platform for inventory updates
   termsOfService: http://swagger.io/terms/
   contact:
     email: nobody@nowhere.com
@@ -13,35 +13,34 @@ externalDocs:
   description: Find out more about Swagger
   url: http://swagger.io
 servers:
-- url: https://cc-inv-meta-dev.mybluemix.net/cc-inv-meta
+- url: https://cc-inv-meta-dev.mybluemix.net/cc-inv-update
 tags:
-- name: meta_objects
-  description: meta objects are the holders of the meta data. A meta_object describes
-    the attributes of an entity such as warehouse, product, store in physcial world.
+- name: inv_updates
+  description: inventory updates reflect a change to inventory position for a product at a location. 
 paths:
-  /{tenant_id}/{meta_type}/meta_objects:
+  /{tenant_id}/{location_id}/inv_updates:
     parameters:
       - $ref: '#/components/parameters/tenant_id_param'
-      - $ref: '#/components/parameters/meta_type_param'
+      - $ref: '#/components/parameters/location_id_param'
       - in: query
         name: filter
         required: false
         schema:
           type: object
-        description: filter by attributes
+        description: filter updates
         examples:
-          by-category: 
+          by-type: 
             value:
-              category: "LIGHT-OIL-CRACKING"
-          by-node-type:
+              type: ["supply-delta", "supply-absolute"]
+          by-segement:
             value:
-              node-type: "seller"
+              segement: "store-repl"
     get:
       tags:
-      - meta_objects
-      summary: list meta_objects
-      description: Get the complete list of meta_objects
-      operationId: meta_objects-get
+      - inv_updates
+      summary: list inv_updates
+      description: Get the list of inv_updates
+      operationId: inv_updates-get
       responses:
         200:
           description: successful operation
@@ -50,7 +49,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/meta_object'
+                  $ref: '#/components/schemas/inv_update'
         400:
           description: Invalid status value
           content: {}
@@ -58,29 +57,30 @@ paths:
       - cc_inv_auth:
         - write:cc_inv
         - read:cc_inv
-  /{tenant_id}/{meta_type}/meta_objects/{meta_object_id}:
+
+  /{tenant_id}/{location_id}/inv_updates/{inv_update_id}:
     parameters:
     - $ref: '#/components/parameters/tenant_id_param'
-    - $ref: '#/components/parameters/meta_type_param'
-    - name: meta_object_id
+    - $ref: '#/components/parameters/location_id_param'
+    - name: inv_update_id
       in: path
-      description: ID of the meta_object
+      description: ID of the inventory update
       required: true
       schema:
         type: string
     get:
       tags:
-      - meta_objects
-      summary: get a meta_object
-      description: Get a meta_object by id
-      operationId: meta_object-get
+      - inv_updates
+      summary: get a inv_update
+      description: Get a inv_update by id
+      operationId: inv_update-get
       responses:
         200:
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/meta_object'
+                $ref: '#/components/schemas/inv_update'
         500:
           description: Invalid input
           content: {}
@@ -90,16 +90,16 @@ paths:
         - read:cc_inv
     put:
       tags:
-      - meta_objects
-      summary: create/update a meta_object
-      description: Create or update a meta_object
-      operationId: meta_object-put
+      - inv_updates
+      summary: create/update a inv_update
+      description: Create or update a inv_update
+      operationId: inv_update-put
       requestBody:
         description: List of user object
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/meta_object'
+              $ref: '#/components/schemas/inv_update'
         required: true
       responses:
         200:
@@ -107,7 +107,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/meta_object'
+                $ref: '#/components/schemas/inv_update'
         500:
           description: Invalid input
           content: {}
@@ -118,10 +118,10 @@ paths:
       x-codegen-request-body-name: body
     delete:
       tags:
-      - meta_objects
-      summary: delete a meta_object
-      description: Delete a meta_object by meta_object id
-      operationId: meta_object-delete
+      - inv_updates
+      summary: delete a inv_update
+      description: Delete a inv_update by inv_update id
+      operationId: inv_update-delete
       responses:
         200:
           description: successful operation
@@ -140,31 +140,42 @@ components:
       properties:
         name:
           type: string
-          minimum: 1
-          maximum: 1
           description: name of the attribute
         value:
           type: string
-          minimum: 1
-          maximum: 1
           description: value of the attribute
-    meta_object:
+    inv_update:
       type: object
       properties:
-        meta_object_id:
+        inv_update_id:
           type: string
-          minimum: 1
-          maximum: 1
-          description: id of the meta_object
+          description: id of the inv_update
+        location_id:
+          type: string
+          description: location's meta object id
+        type:
+          type: string
+          enum: [supply-delta, supply-absolute, demand-delta, demand-absolute]
+          description: type of update. Delta or absolute changes to supply or demand.
+        operation:
+          type: string
+          description: operation that causes the update
+          example: order-sales, shipment-out, shipment-in, cycle-count
+        position_type:
+          type: string
+          description: type of the inventory position
+          example: supply-on-hand, demand-open-order, supply-on-po
+        segment:
+          type: string
+          description: segment of the inventory position
+        quantity:
+          type: number
+          description: quantity of the update
         description:
           type: string
-          minimum: 1
-          maximum: 1
-          description: description of the meta_object
+          description: description of the inv_update
         parent_object_id:
           type: string
-          minimum: 0
-          maximum: 1
           description: id of parent meta object if exists
         attributes:
           type: array
@@ -179,23 +190,14 @@ components:
       required: true
       schema:
         type: string
-    meta_type_param:
-      name: meta_type
+    location_id_param:
+      name: location_id
       in: path
-      description: Type of the meta
+      description: meta object id of an inventory location or aggregation point (DG)
       required: true
       schema:
         type: string
-      examples: 
-        product:
-          value: product
-        warehouse:
-          value: warehouse
-        store:
-          value: store
-        distribution-group:
-          value: distribution-group
-    
+        
   securitySchemes:
     cc_inv_auth:
       type: oauth2
@@ -205,7 +207,3 @@ components:
           scopes:
             write:cc_inv: modify s4s entities
             read:cc_inv: read s4s entities
-    api_key:
-      type: apiKey
-      name: api_key
-      in: header
